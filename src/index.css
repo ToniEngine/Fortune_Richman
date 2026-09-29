@@ -1,0 +1,211 @@
+@import 'tailwindcss';
+
+@theme {
+  /* ---- Typography ---- */
+  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ---- Deep navy (primary) ---- */
+  --color-navy-50: #eef3fa;
+  --color-navy-100: #d8e3f2;
+  --color-navy-200: #b0c4e0;
+  --color-navy-300: #7f9cc4;
+  --color-navy-400: #4c6f9f;
+  --color-navy-500: #2c4d7c;
+  --color-navy-600: #1c3862;
+  --color-navy-700: #14294b;
+  --color-navy-800: #0e1e39;
+  --color-navy-900: #0a1834;
+  --color-navy-950: #050d1c;
+
+  /* ---- Medical teal (primary accent) ---- */
+  --color-teal-50: #e6f8f7;
+  --color-teal-100: #c3efec;
+  --color-teal-200: #8ee0db;
+  --color-teal-300: #55cdc6;
+  --color-teal-400: #2ebbb3;
+  --color-teal-500: #14a29b;
+  --color-teal-600: #0d8380;
+  --color-teal-700: #0d6866;
+  --color-teal-800: #0f5352;
+  --color-teal-900: #0f4544;
+
+  /* ---- Soft blue (secondary) ---- */
+  --color-sky-100: #e5eefb;
+  --color-sky-200: #c7ddf6;
+  --color-sky-300: #9cc2ec;
+  --color-sky-400: #6ba1de;
+  --color-sky-500: #4a83c8;
+
+  /* ---- Mist / light gray ---- */
+  --color-mist-50: #fafbfc;
+  --color-mist-100: #f4f6f9;
+  --color-mist-200: #e8ecf2;
+  --color-mist-300: #d5dce6;
+
+  /* ---- Subtle green accent ---- */
+  --color-leaf-100: #dff5e9;
+  --color-leaf-300: #86dbae;
+  --color-leaf-500: #2fbf71;
+  --color-leaf-600: #229a59;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    /* Single source of truth for anchor offset under the sticky navbar
+       (72px mobile / 80px desktop, plus breathing room). Sections must NOT
+       also set scroll-mt-* or the two offsets compound. */
+    scroll-padding-top: 6.5rem;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body {
+    /* hard guarantee against horizontal overflow on small screens */
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    @apply bg-white font-sans text-navy-700 antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-navy-900;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    @apply bg-teal-200 text-navy-900;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-teal-500;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility container-x {
+  @apply mx-auto w-full max-w-[76rem] px-5 sm:px-8 lg:px-10;
+}
+
+/* Eyebrow / kicker label used above section titles */
+@utility eyebrow {
+  @apply font-display text-[0.7rem] font-bold tracking-[0.18em] uppercase;
+}
+
+@layer components {
+  /* --- Scroll reveal --- */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* --- Decorative backgrounds --- */
+  .grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(28, 56, 98, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(28, 56, 98, 0.055) 1px, transparent 1px);
+    background-size: 46px 46px;
+  }
+  .grid-pattern-dark {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 46px 46px;
+  }
+  .dot-pattern {
+    background-image: radial-gradient(rgba(20, 162, 155, 0.28) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .fade-mask-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  }
+}
+
+/* --- Hero entrance --- */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: rise-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+.animate-float {
+  animation: float-y 7s ease-in-out infinite;
+}
+
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulse-node {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.35);
+  }
+}
